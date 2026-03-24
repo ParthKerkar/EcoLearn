@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoLearn - Student Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              'inter': ['Inter', 'sans-serif'],
+            },
+            colors: {
+              'eco-green': '#16a34a',
+              'eco-teal': '#0f766e',
+              'eco-blue': '#0ea5e9',
+              'eco-light': '#dcfce7',
+              'eco-dark': '#15803d',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.6s ease-out',
+              'slide-up': 'slideUp 0.5s ease-out',
+              'scale-in': 'scaleIn 0.3s ease-out',
+              'pulse-soft': 'pulseSoft 2s infinite',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes slideUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+      @keyframes pulseSoft {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      
+      .glassmorphism {
+        backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .gradient-eco {
+        background: linear-gradient(135deg, #16a34a 0%, #0f766e 100%);
+      }
+      
+      .gradient-bg {
+        background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f7fee7 100%);
+      }
+      
+      .progress-bar {
+        background: linear-gradient(90deg, #16a34a 0%, #0ea5e9 100%);
+      }
+      
+      .modal-backdrop {
+        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.4);
+      }
+    </style>
+</head>
+
+<body class="font-inter gradient-bg min-h-screen">
+    <!-- Header -->
+    <header class="glassmorphism shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 gradient-eco rounded-full flex items-center justify-center">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 14M5 3v12.5A2.5 2.5 0 007.5 18h.5M5 3L19 17m-8-9l3-3M12 12l-3 3"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-800">EcoLearn Student</h1>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <!-- Eco Points Counter -->
+                    <div class="flex items-center space-x-2 bg-white/60 px-4 py-2 rounded-full">
+                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                        </svg>
+                        <span id="ecoPointsCounter" class="font-bold text-eco-green text-lg">750</span>
+                        <span class="text-gray-600 font-medium">points</span>
+                    </div>
+                    
+                    <!-- Profile Avatar -->
+                    <div class="w-10 h-10 bg-eco-green rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold">P</span>
+                    </div>
+                    
+                    <!-- Logout Button -->
+                    <button onclick="logout()" class="px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-white/60 transition-all duration-300">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid lg:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Progress Card -->
+                <div class="glassmorphism rounded-2xl p-6 mb-6 shadow-lg animate-fade-in">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Learning Progress</h3>
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>Lessons Completed</span>
+                            <span id="progressText">8/12</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="progressBar" class="progress-bar h-3 rounded-full" style="width: 67%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Village Growth -->
+                <div class="glassmorphism rounded-2xl p-6 mb-6 shadow-lg animate-fade-in">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Growth Village</h3>
+                    <div class="text-center mb-4">
+                        <div id="villageIcon" class="text-6xl mb-2">🌳</div>
+                        <h4 id="villageStage" class="font-semibold text-gray-800">Growing Forest</h4>
+                        <p id="villageDescription" class="text-sm text-gray-600">Trees are flourishing!</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs text-gray-600">
+                            <span>Next milestone</span>
+                            <span id="nextMilestone">1000 pts</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="villageProgress" class="bg-eco-green h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="glassmorphism rounded-2xl p-6 shadow-lg animate-fade-in">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Your Badges</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="text-center p-3 bg-eco-light/50 rounded-lg border-2 border-eco-green/30">
+                            <div class="text-2xl mb-1">🌿</div>
+                            <p class="text-xs font-semibold">Eco Warrior</p>
+                        </div>
+                        <div class="text-center p-3 bg-eco-light/50 rounded-lg border-2 border-eco-green/30">
+                            <div class="text-2xl mb-1">🧠</div>
+                            <p class="text-xs font-semibold">Quiz Master</p>
+                        </div>
+                        <div class="text-center p-3 bg-gray-100 rounded-lg border-2 border-gray-200 opacity-60">
+                            <div class="text-2xl mb-1">📸</div>
+                            <p class="text-xs font-semibold">Photographer</p>
+                        </div>
+                        <div class="text-center p-3 bg-gray-100 rounded-lg border-2 border-gray-200 opacity-60">
+                            <div class="text-2xl mb-1">🛡️</div>
+                            <p class="text-xs font-semibold">Guardian</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <!-- Lesson Section -->
+                <div class="glassmorphism rounded-2xl p-8 mb-8 shadow-lg animate-slide-up">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Current Lesson: Ocean Conservation</h2>
+                    
+                    <!-- Video Player -->
+                    <div class="mb-6">
+                        <div class="relative bg-gray-900 rounded-xl overflow-hidden shadow-2xl">
+                            <video 
+                                id="lessonVideo"
+                                class="w-full h-64 md:h-80"
+                                poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Cdefs%3E%3ClinearGradient id='ocean' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23006994;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230ea5e9;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='400' fill='url(%23ocean)'/%3E%3Ctext x='400' y='180' text-anchor='middle' fill='white' font-size='24' font-family='Inter'%3EOcean Conservation%3C/text%3E%3Ctext x='400' y='220' text-anchor='middle' fill='white' font-size='16' font-family='Inter'%3EDuration: 18 minutes%3C/text%3E%3Ccircle cx='400' cy='260' r='30' fill='rgba(255,255,255,0.2)' stroke='white' stroke-width='2'/%3E%3Cpolygon points='390,250 410,260 390,270' fill='white'/%3E%3C/svg%3E"
+                                controls
+                            >
+                                <source src="lesson.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Understanding Marine Ecosystems</h3>
+                                <p class="text-gray-600 text-sm">Duration: 18 minutes</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <button 
+                            id="takeQuizBtn"
+                            onclick="openQuizModal()"
+                            class="gradient-eco text-white px-6 py-4 rounded-xl font-semibold hover:opacity-90 transition-all duration-300 flex items-center justify-center space-x-3"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Take Quiz (+5 points)</span>
+                        </button>
+                        
+                        <button 
+                            onclick="openChallengeModal()"
+                            class="bg-eco-blue text-white px-6 py-4 rounded-xl font-semibold hover:opacity-90 transition-all duration-300 flex items-center justify-center space-x-3"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>Upload Challenge Photo</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="glassmorphism rounded-2xl p-8 shadow-lg animate-slide-up">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Class Leaderboard</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-100 to-yellow-50 rounded-xl border-2 border-yellow-200">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                                <div class="text-2xl"></div>
+                                <span class="font-bold text-gray-800">Pranav</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <span class="font-bold text-eco-green">1250</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                                <div class="text-2xl"></div>
+                                <span class="font-bold text-gray-800">Nishil</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <span class="font-bold text-eco-green">1100</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-gradient-to-r from-eco-light to-green-50 rounded-xl border-2 border-eco-green">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-eco-green rounded-full flex items-center justify-center text-white font-bold">3</div>
+                                <div class="text-2xl"></div>
+                                <span class="font-bold text-gray-800">You</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <span id="leaderboardPoints" class="font-bold text-eco-green">750</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quizModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="glassmorphism rounded-3xl p-8 max-w-lg w-full animate-scale-in">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Ocean Conservation Quiz</h3>
+            <div id="quizContent">
+                <p class="text-lg text-gray-700 mb-6">Which of these is NOT a benefit of healthy coral reefs?</p>
+                <div class="space-y-3">
+                    <button onclick="selectAnswer(this, false)" class="w-full text-left p-4 border-2 border-gray-200 rounded-xl hover:border-eco-blue hover:bg-eco-blue/10 transition-all duration-300">
+                        A) They increase water pollution
+                    </button>
+                    <button onclick="selectAnswer(this, true)" class="w-full text-left p-4 border-2 border-gray-200 rounded-xl hover:border-eco-blue hover:bg-eco-blue/10 transition-all duration-300">
+                        B) They provide marine habitat
+                    </button>
+                    <button onclick="selectAnswer(this, false)" class="w-full text-left p-4 border-2 border-gray-200 rounded-xl hover:border-eco-blue hover:bg-eco-blue/10 transition-all duration-300">
+                        C) They protect coastlines from erosion
+                    </button>
+                    <button onclick="selectAnswer(this, false)" class="w-full text-left p-4 border-2 border-gray-200 rounded-xl hover:border-eco-blue hover:bg-eco-blue/10 transition-all duration-300">
+                        D) They support fishing communities
+                    </button>
+                </div>
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button onclick="closeQuizModal()" class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Challenge Upload Modal -->
+    <div id="challengeModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="glassmorphism rounded-3xl p-8 max-w-lg w-full animate-scale-in">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Upload Eco-Challenge Photo</h3>
+            <div class="mb-6">
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    <h4 class="font-semibold text-gray-800 mb-2">Drop your photo here or click to browse</h4>
+                    <p class="text-gray-600">Show us your environmental action!</p>
+                    <input type="file" id="challengePhoto" accept="image/*" class="hidden" onchange="previewPhoto(this)">
+                    <button onclick="document.getElementById('challengePhoto').click()" class="mt-4 px-4 py-2 gradient-eco text-white rounded-lg hover:opacity-90 transition-opacity">
+                        Choose Photo
+                    </button>
+                </div>
+                <div id="photoPreview" class="hidden mt-4">
+                    <img id="previewImage" class="w-full h-48 object-cover rounded-xl">
+                </div>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Describe your eco-action:</label>
+                <textarea 
+                    id="challengeDescription" 
+                    rows="3" 
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-eco-green focus:outline-none resize-none"
+                    placeholder="Tell us about your environmental contribution..."
+                ></textarea>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeChallengeModal()" class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+                    Cancel
+                </button>
+                <button onclick="submitChallenge()" class="flex-1 gradient-eco text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                    Submit Challenge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed top-4 right-4 bg-white rounded-lg shadow-lg border-l-4 border-eco-green p-4 z-50 animate-slide-up">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 text-eco-green mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span id="toastMessage" class="text-gray-800 font-medium"></span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
